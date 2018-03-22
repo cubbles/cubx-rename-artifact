@@ -2,9 +2,14 @@
   "name": "cubx-rename-artifact",
   "version": "1.0.0",
   "description": "Npm module to rename an artifactt of a webpackage",
-  "main": "index.js",
+  "main": "lib/cubx-prepare-webpackage-release.js",
+  "bin": {
+    "cubx-rename-artifact": "./bin/cubx-rename-artifact.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "npm run-script lint",
+    "lint": "eslint lib/**/*.js bin/**/*.js test/unit/**/*.js *.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -20,5 +25,29 @@
   "bugs": {
     "url": "https://github.com/cubbles/cubx-rename-artifact/issues"
   },
-  "homepage": "https://github.com/cubbles/cubx-rename-artifact#readme"
+  "homepage": "https://github.com/cubbles/cubx-rename-artifact#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "grunt": "^0.4.5",
+    "grunt-githooks": "^0.3.1",
+    "grunt-shell": "^1.1.2",
+    "ink-docstrap": "^1.1.1",
+    "jsdoc": "^3.4.0",
+    "load-grunt-configs": "^0.4.1",
+    "load-grunt-tasks": "^2.0.0",
+    "mocha": "^3.3.0",
+    "proxyquire": "^1.7.10",
+    "sinon": "^2.2.0",
+    "sinon-chai": "^2.10.0",
+    "time-grunt": "~1.0.0"
+  },
+  "dependencies": {
+    "command-line-args": "^4.0.4",
+    "fs-extra": "^3.0.1",
+    "path": "^0.12.7"
+  }
 }

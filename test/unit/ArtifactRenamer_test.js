@@ -27,6 +27,7 @@
         'Components', index: 0 },
         util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 }
       };
+      fs.copySync(wpBackupPath, wpPath);
     });
     beforeEach(function () {
       var ArtifactRenamer = require('../../lib/cubx-rename-artifact');

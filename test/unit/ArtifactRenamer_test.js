@@ -21,18 +21,18 @@
       wpManifestPath = path.join(wpPath, 'manifest.webpackage');
       renameSuffix = '-renamed';
       artifactsToChange = {
-        app: { artifactId: 'my-app', artifactType: 'apps', index: 1 },
-        elementary: { artifactId: 'my-elementary', artifactType: 'elementaryComponents', index: 1 },
+        app: { artifactId: 'app', artifactType: 'apps', index: 1 },
+        elementary: { artifactId: 'my-elementary-1', artifactType: 'elementaryComponents', index: 1 },
         compound: { artifactId: 'my-compound', artifactType: 'compound' +
         'Components', index: 0 },
         util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 }
       };
-      fs.emptyDirSync(wpPath);
-      fs.copySync(wpBackupPath, wpPath);
     });
     beforeEach(function () {
       var ArtifactRenamer = require('../../lib/cubx-rename-artifact');
       artifactRenamer = new ArtifactRenamer(wpPath);
+      fs.emptyDirSync(wpPath);
+      fs.copySync(wpBackupPath, wpPath);
     });
     describe('#_renameArtifactInManifest', function () {
       beforeEach(function () {
@@ -75,6 +75,27 @@
       it('should rename an utility', function () {
         renameArtifactFolder('util');
       });
+    });
+    describe('#_renameElementaryFiles', function () {
+      it('should rename elementary files', function () {
+        var artifactId = artifactsToChange.elementary.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameElementaryFiles(artifactId, newArtifactId);
+        var filesWereChanged = fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.html')) &&
+          fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.js')) &&
+          fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '-style.html'));
+        expect(filesWereChanged).to.be.true;
+      });
+
+    });
+    describe('#_renameCompoundFiles', function () {
+      it('should rename elementary files', function () {
+        var artifactId = artifactsToChange.compound.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameCompoundFiles(artifactId, newArtifactId);
+        expect(fs.existsSync(path.join(wpPath, artifactId, 'css', newArtifactId + '.css'))).to.be.true;
+      });
+
     });
     describe('#_loadManifest', function () {
       var expectedManifest;

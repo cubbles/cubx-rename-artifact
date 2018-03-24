@@ -1,8 +1,8 @@
 {
-  "name": "my-webpackage",
+  "name": "wp",
   "groupId": "",
-  "version": "0.1.0",
-  "modelVersion": "9.1.0",
+  "version": "0.1.0-SNAPSHOT",
+  "modelVersion": "9.1.1",
   "docType": "webpackage",
   "author": {
     "name": "Edwin Gamboa",
@@ -14,6 +14,17 @@
   "artifacts": {
     "apps": [
       {
+        "artifactId": "app",
+        "description": "This is a simple pre-generated app.",
+        "runnables": [
+          {
+            "name": "app",
+            "path": "/index.html",
+            "description": "Call this app as a simple demo."
+          }
+        ]
+      },
+      {
         "artifactId": "docs",
         "description": "Generated webpackage documentation.",
         "runnables": [
@@ -23,49 +34,12 @@
             "description": "Show the interface of this component."
           }
         ]
-      },
-      {
-        "artifactId": "my-app",
-        "description": "This is a simple pre-generated app.",
-        "runnables": [
-          {
-            "name": "app",
-            "path": "/index.html",
-            "description": "Call this app as a simple demo."
-          }
-        ]
       }
     ],
     "elementaryComponents": [
       {
-        "artifactId": "my-elementary-1",
-        "description": "Elementary component for the fixer-io webservice",
-        "runnables": [
-          {
-            "name": "demo",
-            "path": "/demo/index.html",
-            "description": "Demo app..."
-          },
-          {
-            "name": "docs",
-            "path": "/docs/index.html",
-            "description": "Show the interface of this component."
-          }
-        ],
-        "resources": [
-          "my-elementary-1.html"
-        ],
-        "dependencies": [
-          {
-            "webpackageId": "cubx.core.rte@2.0.1",
-            "artifactId": "cubxpolymer"
-          }
-        ],
-        "slots": []
-      },
-      {
         "artifactId": "my-elementary",
-        "description": "Elementary component for the fixer-io webservice",
+        "description": "This is an elementary-component based on Polymer.",
         "runnables": [
           {
             "name": "demo",
@@ -83,17 +57,63 @@
         ],
         "dependencies": [
           {
-            "webpackageId": "cubx.core.rte@2.0.1",
+            "webpackageId": "cubx.core.rte@2.4.0",
             "artifactId": "cubxpolymer"
           }
         ],
-        "slots": []
+        "slots": [
+          {
+            "slotId": "a",
+            "type": "number",
+            "direction": [
+              "input",
+              "output"
+            ],
+            "value": 10
+          }
+        ]
+      },
+      {
+        "artifactId": "my-elementary-1",
+        "description": "This is an elementary-component based on Polymer.",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface of this component."
+          }
+        ],
+        "resources": [
+          "my-elementary-1.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@2.4.0",
+            "artifactId": "cubxpolymer"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "a",
+            "type": "number",
+            "direction": [
+              "input",
+              "output"
+            ],
+            "value": 10
+          }
+        ]
       }
     ],
     "compoundComponents": [
       {
         "artifactId": "my-compound",
-        "description": "Component to display the rates in a chart",
+        "description": "This is a cubbles-compound-component.",
         "runnables": [
           {
             "name": "demo",
@@ -111,34 +131,52 @@
         ],
         "dependencies": [
           {
-            "artifactId": "my-elementary-1"
-          },
-          {
-            "webpackageId": "com.incowia.lib.chart-library@0.2.0",
-            "artifactId": "bar-chart"
+            "webpackageId": "my-webpackage@1.2.3",
+            "artifactId": "my-artifact"
           }
         ],
-        "slots": [],
+        "slots": [
+          {
+            "slotId": "outdoorTemperature",
+            "type": "number",
+            "direction": [
+              "input",
+              "output"
+            ]
+          }
+        ],
         "members": [
           {
-            "memberId": "elem1",
-            "artifactId": "my-elementary-1"
-          },
-          {
-            "memberId": "chart",
-            "artifactId": "bar-chart"
+            "memberId": "member1",
+            "artifactId": "my-artifact"
           }
         ],
-        "connections": [],
-        "inits": []
+        "connections": [
+          {
+            "connectionId": "temperature-transfer",
+            "source": {
+              "slot": "outdoorTemperature"
+            },
+            "destination": {
+              "memberIdRef": "member1",
+              "slot": "temperatureIn"
+            }
+          }
+        ],
+        "inits": [
+          {
+            "slot": "outdoorTemperature",
+            "value": 0
+          }
+        ]
       }
     ],
     "utilities": [
       {
         "artifactId": "my-util",
-        "description": "My super utility",
+        "description": "",
         "resources": [
-          "vendor/my-util.min.html"
+          "html-import.html"
         ],
         "dependencies": []
       }

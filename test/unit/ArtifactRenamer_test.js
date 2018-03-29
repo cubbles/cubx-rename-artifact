@@ -95,10 +95,11 @@
         var artifactId = artifactsToChange.elementary.artifactId;
         var newArtifactId = artifactId + renameSuffix;
         artifactRenamer._renameElementaryFiles(artifactId, newArtifactId);
-        var filesWereChanged = fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.html')) &&
-          fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.js')) &&
-          fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '-style.html'));
-        expect(filesWereChanged).to.be.true;
+        return Promise.all([
+          expect(fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.html'))).to.be.true,
+          expect(fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '.js'))).to.be.true,
+          expect(fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '-style.html'))).to.be.true
+        ]);
       });
 
     });
@@ -151,6 +152,35 @@
         renameComponentDocs('compound');
       });
 
+    });
+    describe('#_renameElementary', function () {
+      it('should rename an elementary', function () {
+        var artifactId = artifactsToChange.elementary.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameElementary(artifactId, newArtifactId);
+        // Manifest
+        var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+        var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
+        var expectedManifest = JSON.parse(fs.readFileSync(expectedRefactoredManifestPath, 'utf8'));
+        // Demo
+        var expectedRefactoredDemoPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'demo.html');
+        var refactoredDemoPath = path.join(wpPath, newArtifactId, 'demo', 'index.html');
+        // Docs
+        var expectedRefactoredDocsPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'docs.html');
+        var refactoredDocsPath = path.join(wpPath, newArtifactId, 'docs', 'index.html');
+        //Template
+        var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
+        var refactoredTemplatePath = path.join(wpPath, newArtifactId, newArtifactId + '.html');
+        return Promise.all([
+          expect(refactoredManifest).to.be.deep.equal(expectedManifest),
+          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '.html'))).to.be.true,
+          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '.js'))).to.be.true,
+          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '-style.html'))).to.be.true,
+          expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDemoPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredTemplatePath, 'utf8'))
+        ]);
+      });
     });
     describe('#_loadManifest', function () {
       var expectedManifest;

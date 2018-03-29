@@ -136,6 +136,22 @@
       });
 
     });
+    describe('#_renameComponentInDocs', function () {
+      function renameComponentDocs(componentKey) {
+        var artifactId = artifactsToChange[componentKey].artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        var refactoredDemo = artifactRenamer._renameComponentInDocs(artifactId, newArtifactId);
+        var expectedRefactoredDemoPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'docs.html');
+        expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(refactoredDemo);
+      }
+      it('should rename artifactId of elementary in demo', function () {
+        renameComponentDocs('elementary');
+      });
+      it('should rename artifactId of compound in demo', function () {
+        renameComponentDocs('compound');
+      });
+
+    });
     describe('#_loadManifest', function () {
       var expectedManifest;
       beforeEach(function () {

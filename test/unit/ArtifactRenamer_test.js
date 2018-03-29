@@ -208,6 +208,31 @@
         ]);
       });
     });
+    describe('#_renameUtilityOrApp', function () {
+      beforeEach(function () {
+        artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+      });
+      it('should rename util', function () {
+        var artifactId = artifactsToChange.util.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId);
+        // Manifest
+        var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+        var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
+        var expectedManifest = JSON.parse(fs.readFileSync(expectedRefactoredManifestPath, 'utf8'));
+        expect(refactoredManifest).to.be.deep.equal(expectedManifest);
+      });
+      it('should rename app', function () {
+        var artifactId = artifactsToChange.app.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId);
+        // Manifest
+        var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+        var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
+        var expectedManifest = JSON.parse(fs.readFileSync(expectedRefactoredManifestPath, 'utf8'));
+        expect(refactoredManifest).to.be.deep.equal(expectedManifest);
+      });
+    });
     describe('#_loadManifest', function () {
       var expectedManifest;
       beforeEach(function () {

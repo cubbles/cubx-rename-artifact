@@ -22,18 +22,16 @@
       wpManifestPath = path.join(wpPath, 'manifest.webpackage');
       renameSuffix = '-renamed';
       artifactsToChange = {
-        app: { artifactId: 'app', artifactType: 'apps', index: 1 },
+        app: { artifactId: 'app', artifactType: 'apps', index: 0 },
         elementary: {
           artifactId: 'my-elementary-1',
           artifactType: 'elementaryComponents',
-          index: 1,
-          resourceIndex: 0
+          index: 1
         },
         compound: {
           artifactId: 'my-compound',
           artifactType: 'compoundComponents',
-          index: 0,
-          resourceIndex: 1
+          index: 0
         },
         util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 }
       };
@@ -157,7 +155,7 @@
       it('should rename an elementary', function () {
         var artifactId = artifactsToChange.elementary.artifactId;
         var newArtifactId = artifactId + renameSuffix;
-        artifactRenamer._renameElementary(artifactId, newArtifactId);
+        artifactRenamer._renameElementary(artifactId, newArtifactId, artifactsToChange.elementary);
         // Manifest
         var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
         var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
@@ -189,7 +187,7 @@
       it('should rename an compound', function () {
         var artifactId = artifactsToChange.compound.artifactId;
         var newArtifactId = artifactId + renameSuffix;
-        artifactRenamer._renameCompound(artifactId, newArtifactId);
+        artifactRenamer._renameCompound(artifactId, newArtifactId, artifactsToChange.compound);
         // Manifest
         var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
         var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
@@ -215,7 +213,7 @@
       it('should rename util', function () {
         var artifactId = artifactsToChange.util.artifactId;
         var newArtifactId = artifactId + renameSuffix;
-        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId);
+        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId, artifactsToChange.util);
         // Manifest
         var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
         var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
@@ -225,7 +223,7 @@
       it('should rename app', function () {
         var artifactId = artifactsToChange.app.artifactId;
         var newArtifactId = artifactId + renameSuffix;
-        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId);
+        artifactRenamer._renameUtilityOrApp(artifactId, newArtifactId, artifactsToChange.app);
         // Manifest
         var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
         var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');

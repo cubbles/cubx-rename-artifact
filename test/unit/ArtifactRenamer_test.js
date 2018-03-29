@@ -119,6 +119,21 @@
         var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
         expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(refactoredTemplate);
       });
+    });
+    describe('#_renameComponentInDemo', function () {
+      function renameComponentDemo(componentKey) {
+        var artifactId = artifactsToChange[componentKey].artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        var refactoredDemo = artifactRenamer._renameComponentInDemo(artifactId, newArtifactId);
+        var expectedRefactoredDemoPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'demo.html');
+        expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(refactoredDemo);
+      }
+      it('should rename artifactId of elementary in demo', function () {
+        renameComponentDemo('elementary');
+      });
+      it('should rename artifactId of compound in demo', function () {
+        renameComponentDemo('compound');
+      });
 
     });
     describe('#_loadManifest', function () {

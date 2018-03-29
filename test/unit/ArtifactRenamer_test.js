@@ -1,11 +1,10 @@
-/* globals describe, beforeEach, it, expect, after, before, __dirname */
+/* globals describe, beforeEach, it, expect, before, __dirname, sinon */
 (function () {
   'use strict';
   describe('ArtifactRenamer', function () {
     var artifactRenamer;
     var fs;
     var wpBackupPath;
-    var wpBackupManifestPath;
     var wpPath;
     var wpManifestPath;
     var path;
@@ -17,7 +16,6 @@
       path = require('path');
 
       wpBackupPath = path.resolve(__dirname, '../resources/wp-backup');
-      wpBackupManifestPath = path.join(wpBackupPath, 'manifest.webpackage');
       wpPath = path.join(__dirname, '../resources/wp');
       wpManifestPath = path.join(wpPath, 'manifest.webpackage');
       renameSuffix = '-renamed';
@@ -96,7 +94,6 @@
           expect(fs.existsSync(path.join(wpPath, artifactId, newArtifactId + '-style.html'))).to.be.true
         ]);
       });
-
     });
     describe('#_renameCompoundFiles', function () {
       it('should rename elementary files', function () {
@@ -105,7 +102,6 @@
         artifactRenamer._renameCompoundFiles(artifactId, newArtifactId);
         expect(fs.existsSync(path.join(wpPath, artifactId, 'css', newArtifactId + '.css'))).to.be.true;
       });
-
     });
     describe('#_refactorElementaryTemplate', function () {
       it('should rename dom-module id and all references to files in elementary template', function () {
@@ -117,7 +113,7 @@
       });
     });
     describe('#_renameComponentInDemo', function () {
-      function renameComponentDemo(componentKey) {
+      function renameComponentDemo (componentKey) {
         var artifactId = artifactsToChange[componentKey].artifactId;
         var newArtifactId = artifactId + renameSuffix;
         var refactoredDemo = artifactRenamer._renameComponentInDemo(artifactId, newArtifactId);
@@ -130,10 +126,9 @@
       it('should rename artifactId of compound in demo', function () {
         renameComponentDemo('compound');
       });
-
     });
     describe('#_renameComponentInDocs', function () {
-      function renameComponentDocs(componentKey) {
+      function renameComponentDocs (componentKey) {
         var artifactId = artifactsToChange[componentKey].artifactId;
         var newArtifactId = artifactId + renameSuffix;
         var refactoredDemo = artifactRenamer._renameComponentInDocs(artifactId, newArtifactId);
@@ -146,7 +141,6 @@
       it('should rename artifactId of compound in demo', function () {
         renameComponentDocs('compound');
       });
-
     });
     describe('#_renameElementary', function () {
       beforeEach(function () {
@@ -166,7 +160,7 @@
         // Docs
         var expectedRefactoredDocsPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'docs.html');
         var refactoredDocsPath = path.join(wpPath, newArtifactId, 'docs', 'index.html');
-        //Template
+        // Template
         var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
         var refactoredTemplatePath = path.join(wpPath, newArtifactId, newArtifactId + '.html');
         return Promise.all([
@@ -202,7 +196,7 @@
           expect(refactoredManifest).to.be.deep.equal(expectedManifest),
           expect(fs.existsSync(path.join(wpPath, newArtifactId, 'css/' + newArtifactId + '.css'))).to.be.true,
           expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDemoPath, 'utf8')),
-          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8'))
         ]);
       });
     });
@@ -235,7 +229,7 @@
       beforeEach(function () {
         artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
       });
-      function renameArtifact(artifactKey, methodName) {
+      function renameArtifact (artifactKey, methodName) {
         sinon.spy(artifactRenamer, methodName);
         var artifactId = artifactsToChange[artifactKey].artifactId;
         var newArtifactId = artifactId + renameSuffix;
@@ -268,7 +262,7 @@
       beforeEach(function () {
         artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
       });
-      function refactorComponentResources(artifactKey) {
+      function refactorComponentResources (artifactKey) {
         var oldArtifactId = artifactsToChange[artifactKey].artifactId;
         var newArtifactId = oldArtifactId + renameSuffix;
         artifactRenamer._refactorComponentResourcesInManifest(oldArtifactId, newArtifactId, artifactsToChange[artifactKey]);
@@ -278,10 +272,10 @@
         expect(resources).to.be.deep.equal(expectedResources);
       }
       it('should rename an elementary', function () {
-        refactorComponentResources('elementary')
+        refactorComponentResources('elementary');
       });
       it('should rename a compound', function () {
-        refactorComponentResources('compound')
+        refactorComponentResources('compound');
       });
     });
   });

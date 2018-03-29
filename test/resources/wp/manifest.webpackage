@@ -74,7 +74,7 @@
         ]
       },
       {
-        "artifactId": "my-elementary-1-renamed",
+        "artifactId": "my-elementary-1",
         "description": "This is an elementary-component based on Polymer.",
         "runnables": [
           {
@@ -89,7 +89,7 @@
           }
         ],
         "resources": [
-          "my-elementary-1-renamed.html"
+          "my-elementary-1.html"
         ],
         "dependencies": [
           {

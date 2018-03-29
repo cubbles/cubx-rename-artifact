@@ -14,7 +14,7 @@
   "artifacts": {
     "apps": [
       {
-        "artifactId": "app",
+        "artifactId": "app-renamed",
         "description": "This is a simple pre-generated app.",
         "runnables": [
           {
@@ -74,7 +74,7 @@
         ]
       },
       {
-        "artifactId": "my-elementary-1",
+        "artifactId": "my-elementary-1-renamed",
         "description": "This is an elementary-component based on Polymer.",
         "runnables": [
           {
@@ -89,7 +89,7 @@
           }
         ],
         "resources": [
-          "my-elementary-1.html"
+          "my-elementary-1-renamed.html"
         ],
         "dependencies": [
           {
@@ -112,7 +112,7 @@
     ],
     "compoundComponents": [
       {
-        "artifactId": "my-compound",
+        "artifactId": "my-compound-renamed",
         "description": "This is a cubbles-compound-component.",
         "runnables": [
           {
@@ -128,7 +128,7 @@
         ],
         "resources": [
           "empty-file.js",
-          "css/my-compound.css"
+          "css/my-compound-renamed.css"
         ],
         "dependencies": [
           {
@@ -174,7 +174,7 @@
     ],
     "utilities": [
       {
-        "artifactId": "my-util",
+        "artifactId": "my-util-renamed",
         "description": "",
         "resources": [
           "html-import.html"

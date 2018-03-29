@@ -8,9 +8,11 @@
     var wpBackupManifestPath;
     var wpPath;
     var wpManifestPath;
+    var refactoredManifest;
     var path;
     var artifactsToChange = {};
     var renameSuffix;
+    var refactoredFilesFolderName = 'refactored-files';
     before(function () {
       fs = require('fs-extra');
       path = require('path');
@@ -22,12 +24,23 @@
       renameSuffix = '-renamed';
       artifactsToChange = {
         app: { artifactId: 'app', artifactType: 'apps', index: 1 },
-        elementary: { artifactId: 'my-elementary-1', artifactType: 'elementaryComponents', index: 1 },
-        compound: { artifactId: 'my-compound', artifactType: 'compound' +
-        'Components', index: 0 },
+        elementary: {
+          artifactId: 'my-elementary-1',
+          artifactType: 'elementaryComponents',
+          index: 1,
+          resourceIndex: 0
+        },
+        compound: {
+          artifactId: 'my-compound',
+          artifactType: 'compoundComponents',
+          index: 0,
+          resourceIndex: 1
+        },
         util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 }
       };
       fs.copySync(wpBackupPath, wpPath);
+      var refactoredManifestPath = path.join(wpBackupPath, 'refactored-files', 'manifest.webpackage');
+      refactoredManifest = JSON.parse(fs.readFileSync(refactoredManifestPath, 'utf8'));
     });
     beforeEach(function () {
       var ArtifactRenamer = require('../../lib/cubx-rename-artifact');
@@ -40,7 +53,7 @@
         artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
       });
       var renameArtifact = function (artifactType) {
-        var newArtifactId = artifactsToChange[artifactType] + renameSuffix;
+        var newArtifactId = artifactsToChange[artifactType].artifactId + renameSuffix;
         artifactRenamer._renameArtifactInManifest(newArtifactId, artifactsToChange[artifactType]);
         expect(artifactRenamer.manifest.artifacts[artifactsToChange[artifactType].artifactType][artifactsToChange[artifactType].index].artifactId).to.equal(newArtifactId);
       };
@@ -58,8 +71,8 @@
       });
     });
     describe('#_renameArtifactFolder', function () {
-      var renameArtifactFolder = function (artifactType) {
-        var oldArtifactId = artifactsToChange[artifactType].artifactId;
+      var renameArtifactFolder = function (artifactKey) {
+        var oldArtifactId = artifactsToChange[artifactKey].artifactId;
         var newArtifactId = oldArtifactId + renameSuffix;
         artifactRenamer._renameArtifactFolder(oldArtifactId, newArtifactId);
         expect(fs.existsSync(path.join(wpPath, newArtifactId))).to.be.true;
@@ -98,13 +111,42 @@
       });
 
     });
+    describe('#_refactorElementaryTemplate', function () {
+      it('should rename dom-module id and all references to files in elementary template', function () {
+        var artifactId = artifactsToChange.elementary.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        var refactoredTemplate = artifactRenamer._refactorElementaryTemplate(artifactId, newArtifactId);
+        var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
+        expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(refactoredTemplate);
+      });
+
+    });
     describe('#_loadManifest', function () {
       var expectedManifest;
       beforeEach(function () {
-        expectedManifest = JSON.parse(fs.readFileSync(wpManifestPath), 'utf8');
+        expectedManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
       });
       it('should load the manifest properly', function () {
         expect(artifactRenamer._loadManifest()).to.deep.equal(expectedManifest);
+      });
+    });
+    describe('#_refactorComponentResourcesInManifest', function () {
+      beforeEach(function () {
+        artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+      });
+      function refactorComponentResources(artifactKey) {
+        var oldArtifactId = artifactsToChange[artifactKey].artifactId;
+        var newArtifactId = oldArtifactId + renameSuffix;
+        artifactRenamer._refactorComponentResourcesInManifest(oldArtifactId, newArtifactId, artifactsToChange[artifactKey]);
+        var resources = artifactRenamer.manifest.artifacts[artifactsToChange[artifactKey].artifactType][artifactsToChange[artifactKey].index].resources;
+        var expectedResources = refactoredManifest.artifacts[artifactsToChange[artifactKey].artifactType][artifactsToChange[artifactKey].index].resources;
+        expect(resources).to.be.deep.equal(expectedResources);
+      }
+      it('should rename an elementary', function () {
+        refactorComponentResources('elementary')
+      });
+      it('should rename a compound', function () {
+        refactorComponentResources('compound')
       });
     });
   });

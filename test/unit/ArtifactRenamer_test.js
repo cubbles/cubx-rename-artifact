@@ -231,6 +231,30 @@
         expect(refactoredManifest).to.be.deep.equal(expectedManifest);
       });
     });
+    describe('#renameArtifact', function () {
+      beforeEach(function () {
+        artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+      });
+      function renameArtifact(artifactKey, methodName) {
+        sinon.spy(artifactRenamer, methodName);
+        var artifactId = artifactsToChange[artifactKey].artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer.renameArtifact(artifactId, newArtifactId);
+        expect(artifactRenamer[methodName].calledOnce).to.be.true;
+      }
+      it('should call _renameElementary since artifact is elementary', function () {
+        renameArtifact('elementary', '_renameElementary');
+      });
+      it('should call _renameElementary since artifact is compound', function () {
+        renameArtifact('compound', '_renameCompound');
+      });
+      it('should call _renameUtilityOrApp since artifact is util', function () {
+        renameArtifact('util', '_renameUtilityOrApp');
+      });
+      it('should call _renameUtilityOrApp since artifact is app', function () {
+        renameArtifact('app', '_renameUtilityOrApp');
+      });
+    });
     describe('#_loadManifest', function () {
       var expectedManifest;
       beforeEach(function () {

@@ -13,11 +13,11 @@ cubx-rename-artifact -p <webpackagPath> -a <artifactId> -n <newArtifactId>
 
 ### Other npm modules
 
-```
+```javascript
 var webpackagePath = ...
 var artifactId = ...
 var newArtifactId = ...
 var ArtifactRenamer = requiere('cubx-rename-artifact');
-var artifactRenamer = new WebpackageReleasePreparer(webpackagePath);
+var artifactRenamer = new ArtifactRenamer(webpackagePath);
 artifactRenamer.renameArtifact(artifactId, newArtifactId);
 ```

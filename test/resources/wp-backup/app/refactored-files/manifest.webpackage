@@ -38,42 +38,6 @@
     ],
     "elementaryComponents": [
       {
-        "artifactId": "my-elementary",
-        "description": "This is an elementary-component based on Polymer.",
-        "runnables": [
-          {
-            "name": "demo",
-            "path": "/demo/index.html",
-            "description": "Demo app..."
-          },
-          {
-            "name": "docs",
-            "path": "/docs/index.html",
-            "description": "Show the interface of this component."
-          }
-        ],
-        "resources": [
-          "my-elementary.html"
-        ],
-        "dependencies": [
-          {
-            "webpackageId": "cubx.core.rte@2.4.0",
-            "artifactId": "cubxpolymer"
-          }
-        ],
-        "slots": [
-          {
-            "slotId": "a",
-            "type": "number",
-            "direction": [
-              "input",
-              "output"
-            ],
-            "value": 10
-          }
-        ]
-      },
-      {
         "artifactId": "my-elementary-1",
         "description": "This is an elementary-component based on Polymer.",
         "runnables": [
@@ -94,6 +58,42 @@
         "dependencies": [
           {
             "webpackageId": "cubx.core.rte@2.4.0",
+            "artifactId": "cubxpolymer"
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "a",
+            "type": "number",
+            "direction": [
+              "input",
+              "output"
+            ],
+            "value": 10
+          }
+        ]
+      },
+      {
+        "artifactId": "my-elementary-3-0-0",
+        "description": "This is an elementary-component based on Polymer.",
+        "runnables": [
+          {
+            "name": "demo",
+            "path": "/demo/index.html",
+            "description": "Demo app..."
+          },
+          {
+            "name": "docs",
+            "path": "/docs/index.html",
+            "description": "Show the interface of this component."
+          }
+        ],
+        "resources": [
+          "my-elementary-3-0-0.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@3.0.0",
             "artifactId": "cubxpolymer"
           }
         ],

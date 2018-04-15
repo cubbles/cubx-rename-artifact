@@ -24,14 +24,19 @@
         elementary: {
           artifactId: 'my-elementary-1',
           artifactType: 'elementaryComponents',
-          index: 1
+          index: 0
         },
         compound: {
           artifactId: 'my-compound',
           artifactType: 'compoundComponents',
           index: 0
         },
-        util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 }
+        util: { artifactId: 'my-util', artifactType: 'utilities', index: 0 },
+        elementary300: {
+          artifactId: 'my-elementary-3-0-0',
+          artifactType: 'elementaryComponents',
+          index: 1
+        }
       };
       fs.copySync(wpBackupPath, wpPath);
     });
@@ -163,14 +168,47 @@
         // Template
         var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
         var refactoredTemplatePath = path.join(wpPath, newArtifactId, newArtifactId + '.html');
+        // jsFile
+        var expectedRefactoredJsFilePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'jsFile.js');
+        var refactoredJsFilePath = path.join(wpPath, newArtifactId, newArtifactId + '.js');
         return Promise.all([
           expect(refactoredManifest).to.be.deep.equal(expectedManifest),
           expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '.html'))).to.be.true,
-          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '.js'))).to.be.true,
           expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '-style.html'))).to.be.true,
           expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDemoPath, 'utf8')),
           expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8')),
-          expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredTemplatePath, 'utf8'))
+          expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredTemplatePath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredJsFilePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredJsFilePath, 'utf8'))
+        ]);
+      });
+      it('should rename an elementary that uses rte 3.0.0', function () {
+        var artifactId = artifactsToChange.elementary300.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        artifactRenamer._renameElementary(artifactId, newArtifactId, artifactsToChange.elementary300);
+        // Manifest
+        var refactoredManifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
+        var expectedRefactoredManifestPath = path.join(wpPath, newArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
+        var expectedManifest = JSON.parse(fs.readFileSync(expectedRefactoredManifestPath, 'utf8'));
+        // Demo
+        var expectedRefactoredDemoPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'demo.html');
+        var refactoredDemoPath = path.join(wpPath, newArtifactId, 'demo', 'index.html');
+        // Docs
+        var expectedRefactoredDocsPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'docs.html');
+        var refactoredDocsPath = path.join(wpPath, newArtifactId, 'docs', 'index.html');
+        // Template
+        var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
+        var refactoredTemplatePath = path.join(wpPath, newArtifactId, newArtifactId + '.html');
+        // jsFile
+        var expectedRefactoredJsFilePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'jsFile.js');
+        var refactoredJsFilePath = path.join(wpPath, newArtifactId, newArtifactId + '.js');
+        return Promise.all([
+          expect(refactoredManifest).to.be.deep.equal(expectedManifest),
+          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '.html'))).to.be.true,
+          expect(fs.existsSync(path.join(wpPath, newArtifactId, newArtifactId + '-style.html'))).to.be.true,
+          expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDemoPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredTemplatePath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredJsFilePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredJsFilePath, 'utf8'))
         ]);
       });
     });

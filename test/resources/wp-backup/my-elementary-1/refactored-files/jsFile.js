@@ -10,7 +10,7 @@
    * slot 'a': this.getA(); | this.setA(value)
    */
   CubxPolymer({
-    is: 'my-elementary-1',
+    is: 'my-elementary-1-renamed',
 
     /**
      * Manipulate an element’s local DOM when the element is created.

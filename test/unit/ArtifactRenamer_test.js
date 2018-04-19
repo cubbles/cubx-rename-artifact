@@ -100,14 +100,6 @@
         ]);
       });
     });
-    describe('#_renameCompoundFiles', function () {
-      it('should rename elementary files', function () {
-        var artifactId = artifactsToChange.compound.artifactId;
-        var newArtifactId = artifactId + renameSuffix;
-        artifactRenamer._renameCompoundFiles(artifactId, newArtifactId);
-        expect(fs.existsSync(path.join(wpPath, artifactId, 'css', newArtifactId + '.css'))).to.be.true;
-      });
-    });
     describe('#_refactorElementaryTemplate', function () {
       it('should rename dom-module id and all references to files in elementary template', function () {
         var artifactId = artifactsToChange.elementary.artifactId;
@@ -212,6 +204,15 @@
         ]);
       });
     });
+    describe('#_refactorCompoundTemplate', function () {
+      it('should rename dom-module id and all references to files in elementary template', function () {
+        var artifactId = artifactsToChange.compound.artifactId;
+        var newArtifactId = artifactId + renameSuffix;
+        var refactoredTemplate = artifactRenamer._refactorCompoundTemplate(artifactId, newArtifactId, artifactsToChange.compound);
+        var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
+        expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(refactoredTemplate);
+      });
+    });
     describe('#_renameCompound', function () {
       beforeEach(function () {
         artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
@@ -230,11 +231,15 @@
         // Docs
         var expectedRefactoredDocsPath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'docs.html');
         var refactoredDocsPath = path.join(wpPath, newArtifactId, 'docs', 'index.html');
+        // Template
+        var expectedRefactoredTemplatePath = path.join(wpBackupPath, artifactId, refactoredFilesFolderName, 'template.html');
+        var refactoredTemplatePath = path.join(wpPath, newArtifactId, 'template.html');
         return Promise.all([
           expect(refactoredManifest).to.be.deep.equal(expectedManifest),
           expect(fs.existsSync(path.join(wpPath, newArtifactId, 'css/' + newArtifactId + '.css'))).to.be.true,
           expect(fs.readFileSync(expectedRefactoredDemoPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDemoPath, 'utf8')),
-          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8'))
+          expect(fs.readFileSync(expectedRefactoredDocsPath, 'utf8')).to.be.equal(fs.readFileSync(refactoredDocsPath, 'utf8')),
+          expect(fs.readFileSync(expectedRefactoredTemplatePath, 'utf8')).to.be.equal(fs.readFileSync(refactoredTemplatePath, 'utf8'))
         ]);
       });
     });
@@ -296,14 +301,14 @@
         expect(artifactRenamer._loadManifest()).to.deep.equal(expectedManifest);
       });
     });
-    describe('#_refactorComponentResourcesInManifest', function () {
+    describe('#_refactorComponentResources', function () {
       beforeEach(function () {
         artifactRenamer.manifest = JSON.parse(fs.readFileSync(wpManifestPath, 'utf8'));
       });
       function refactorComponentResources (artifactKey) {
         var oldArtifactId = artifactsToChange[artifactKey].artifactId;
         var newArtifactId = oldArtifactId + renameSuffix;
-        artifactRenamer._refactorComponentResourcesInManifest(oldArtifactId, newArtifactId, artifactsToChange[artifactKey]);
+        artifactRenamer._refactorComponentResources(oldArtifactId, newArtifactId, artifactsToChange[artifactKey]);
         var resources = artifactRenamer.manifest.artifacts[artifactsToChange[artifactKey].artifactType][artifactsToChange[artifactKey].index].resources;
         var expectedRefactoredManifestPath = path.join(wpBackupPath, oldArtifactId, refactoredFilesFolderName, 'manifest.webpackage');
         var expectedResources = JSON.parse(fs.readFileSync(expectedRefactoredManifestPath, 'utf8')).artifacts[artifactsToChange[artifactKey].artifactType][artifactsToChange[artifactKey].index].resources;

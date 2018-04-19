@@ -127,6 +127,7 @@
           }
         ],
         "resources": [
+          "template.html",
           "empty-file.js",
           "css/my-compound-renamed.css"
         ],

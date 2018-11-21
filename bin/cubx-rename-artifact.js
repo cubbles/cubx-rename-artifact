@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 'use strict';
 var ArtifactRenamer = require('../lib/cubx-rename-artifact');
 var commandLineArgs = require('command-line-args');
@@ -11,7 +12,7 @@ var optionDefinitions = [
 var options = commandLineArgs(optionDefinitions);
 
 if (!options.webpackagePath || !options.artifactId || !options.newArtifactId) {
-  console.error('Missed necessary parameters Usage: cubx-rename-artifact -p <webpackagPath> -a <artifactId> -n <newArtifactId>');
+  console.error('Missed necessary parameters Usage: cubx-rename-artifact -p <webpackagePath> -a <artifactId> -n <newArtifactId>');
   process.exit(0);
 }
 var renamer = new ArtifactRenamer(options.webpackagePath);

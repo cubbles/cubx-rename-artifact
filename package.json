@@ -1,6 +1,6 @@
 {
   "name": "cubx-rename-artifact",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Npm module to rename an artifactt of a webpackage",
   "main": "lib/cubx-rename-artifact.js",
   "bin": {

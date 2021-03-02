@@ -10,14 +10,14 @@ module.exports = function (grunt) {
   // grunt.loadTasks('tasks');
 
   // Load grunt configurations
-  var options = {
+  const options = {
     githooks: {
       all: {
         'pre-commit': 'shell:eslint'
       }
     },
     shell: {
-      'docs': {
+      docs: {
         command: 'npm run-script generate-docs'
       },
       eslint: {

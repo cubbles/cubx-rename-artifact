@@ -9,8 +9,11 @@
     "semi": [
       2,
       "always"
-    ]
+    ],
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2
   },
+  "plugins": ["chai-friendly"],
   "globals": {
     "module": true
   }
